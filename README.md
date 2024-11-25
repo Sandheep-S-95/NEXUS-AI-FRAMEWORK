@@ -32,7 +32,7 @@ Ensure workers in hazardous environments wear the proper safety gear.
 **Gear compliance** = **Lives saved**.
 
 ### 🖼️ **Demo**:  
-![GearGuard AI in Action](images/gearguard_demo.jpg)  
+![GearGuard AI in Action](https://github.com/user-attachments/assets/f5f54a0c-a0d4-4114-b4d6-bfcae8c4c6f6)  
 *Spotting safety compliance in real time.*
 
 ### ✨ **Features**:
