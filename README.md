@@ -1,27 +1,75 @@
-Here are the step-by-step instructions for running the code:
+# 🚀 **NEXUS AI FRAMEWORK** 🧠✨
 
-##### 1- Install Ultralytics:
-Open your terminal or command prompt.
-Type the following command and hit Enter:
-<b>pip install ultralytics</b>
+Welcome to the **NEXUS AI Framework**! This platform leverages state-of-the-art **YOLOv9**, a cutting-edge deep learning model, paired with **Flask** and stylish **HTML/CSS**, to provide powerful and specialized image detection solutions.
 
-##### 2- Install Flask:
-While still in the terminal or command prompt, type:
-<b>pip install Flask </b>
+## 🔍 **Key Applications**
+1️⃣ **AcciVision AI** - Revolutionizing accident detection.  
+2️⃣ **GearGuard AI** - Ensuring safety compliance for workers.
 
-##### 3- Navigate to the Code Directory:
-Use the cd command to navigate to the directory where your code is located. For example:
-<b>cd path/to/your/code/directory </b>
+---
 
-#### 4- Download yolov9 weights:
-Download yolov9 weigths and place in your Flask app code directory.
+## ⚠️ **AcciVision AI** 🚑🚧
 
-#### 5- Run the Python Script:
-Once you're in the directory containing your webapp.py file, run the following command:
-<b>python webapp.py </b>
+### 🎯 **Purpose**:
+Detect and classify accidents in real-time using live CCTV feeds.  
+Bringing **proactive safety** to the roads and workplaces.
 
-Following these steps should launch your Flask web application, allowing you to access it through a web browser or any other HTTP client.
+### 🖼️ **Demo**:  
+![AcciVision AI in Action](https://github.com/user-attachments/assets/ab4f8988-e698-411f-aab9-53a12dd78a9a)  
+*Real-time accident detection output.*
 
-#### Check this video to understand the code: https://youtu.be/ObKSM6ftQ4c
+### ✨ **Features**:
+- 📹 **Live CCTV Integration**  
+- 🛑 **Accurate accident classification**  
+- 🚨 **Instant Alerts** for critical scenarios  
 
-![home](https://github.com/AarohiSingla/Object-Detection-Web-Application-with-Flask-and-YOLOv9/assets/60029146/d1c5eb0f-3b62-41a1-8305-bd76005e0cd9)
+---
+
+## 🦺 **GearGuard AI** 👷🛡️
+
+### 🎯 **Purpose**:
+Ensure workers in hazardous environments wear the proper safety gear.  
+**Gear compliance** = **Lives saved**.
+
+### 🖼️ **Demo**:  
+![GearGuard AI in Action](images/gearguard_demo.jpg)  
+*Spotting safety compliance in real time.*
+
+### ✨ **Features**:
+- 👷 **Helmet and vest detection**  
+- 🔔 **Safety violation alerts**  
+- 📊 **Compliance analytics** for workplace reports  
+
+---
+
+## 💡 **How It Works**
+1. 🎥 Upload your live feed or image for analysis.  
+2. 🧠 Let YOLOv9's advanced object detection handle the magic.  
+3. 🚨 Get real-time insights tailored to safety and accident prevention.
+
+---
+
+## 🛠️ **Tech Stack**
+- **YOLOv9** 🧠: Cutting-edge object detection model.  
+- **Flask** 🌐: Backend framework for seamless integration.  
+- **HTML/CSS** 🎨: Intuitive and responsive UI design.
+
+---
+
+## 🤝 **Contributions**
+We welcome all collaborators! Submit your ideas or bug fixes through pull requests. Let's make the world safer together! 🌍💪
+
+---
+
+## 📜 **License**
+This project is open-sourced under the MIT License. 📝  
+Feel free to use and modify it for your needs.
+
+---
+
+## ❤️ **Acknowledgments**
+A huge thanks to the open-source community for inspiring innovation and sharing knowledge! 🤗💡
+
+---
+
+🚀 **Let’s transform safety with AI—one detection at a time!**
