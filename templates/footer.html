@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<style>
+.main-footer {
+    background: linear-gradient(45deg, #000000, #1a1a1a);
+    color: #FFD700;
+    padding: 1.5rem;
+    border-top: 2px solid #FFD700;
+    box-shadow: 0 -2px 10px rgba(255, 215, 0, 0.2);
+    font-family: 'Source Sans Pro', sans-serif;
+}
+
+.main-footer a {
+    color: #FFD700;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+.main-footer a:hover {
+    color: #FFF;
+    text-shadow: 0 0 5px rgba(255, 215, 0, 0.5);
+}
+
+.main-footer a:after {
+    content: '';
+    position: absolute;
+    width: 0;
+    height: 1px;
+    bottom: -2px;
+    left: 0;
+    background-color: #FFD700;
+    transition: width 0.3s ease;
+}
+
+.main-footer a:hover:after {
+    width: 100%;
+}
+
+.float-right {
+    float: right;
+}
+
+.d-none {
+    display: none;
+}
+
+@media (min-width: 576px) {
+    .d-sm-inline-block {
+        display: inline-block !important;
+    }
+}
+</style>
+</head>
+<body>
+    <footer class="main-footer">
+        &copy; 2024 <a target="_blank" rel="noopener noreferrer" href="#">Sandheep S & Vishwak V</a>
+        - coded by <a target="_blank" rel="noopener noreferrer" href="#">SANDHEEP S & VISHWAK V</a>
+        <div class="float-right d-none d-sm-inline-block">
+            <strong>YOLOv9 Object Detection</strong>
+        </div>
+    </footer>
+</body>
+</html>
