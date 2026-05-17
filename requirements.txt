@@ -1,0 +1,14 @@
+# Core Web & Real-Time Communication
+Flask>=3.0.0
+Flask-SocketIO>=5.3.6
+python-socketio>=5.11.0
+websocket-client>=1.8.0
+simple-websocket>=1.0.0
+
+# Machine Learning & Computer Vision
+ultralytics>=8.2.0
+opencv-python>=4.9.0.0
+numpy>=1.23.0
+
+# HTTP Requests (Used to contact the Ambulance dispatch server)
+requests>=2.31.0

@@ -1,0 +1,858 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Accivision | AI Incident Dispatch & CCTV Monitoring Console</title>
+    <meta name="description" content="Accivision AI incident response console for real-time traffic accident detection and immediate ambulance dispatch.">
+    <!-- Google Fonts & Font Awesome -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Plus+Jakarta+Sans:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --bg-color: #0b0f19;
+            --card-bg: rgba(17, 24, 39, 0.65);
+            --card-border: rgba(255, 255, 255, 0.08);
+            --accent-primary: #3b82f6; /* Futuristic Blue */
+            --accent-danger: #ef4444; /* Alert Red */
+            --accent-success: #10b981; /* Healthy Emerald */
+            --accent-warning: #f59e0b; /* Attention Orange */
+            --text-main: #f3f4f6;
+            --text-muted: #9ca3af;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow-x: hidden;
+            background-image: 
+                radial-gradient(at 0% 0%, rgba(59, 130, 246, 0.15) 0px, transparent 50%),
+                radial-gradient(at 50% 0%, rgba(239, 68, 68, 0.08) 0px, transparent 50%),
+                radial-gradient(at 100% 0%, rgba(16, 185, 129, 0.05) 0px, transparent 50%);
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.25rem 2rem;
+            border-bottom: 1px solid var(--card-border);
+            backdrop-filter: blur(16px);
+            background: rgba(11, 15, 25, 0.8);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .logo-section {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .logo-icon {
+            font-size: 1.75rem;
+            color: var(--accent-danger);
+            animation: pulse-glow 2s infinite alternate;
+        }
+
+        h1 {
+            font-family: 'Outfit', sans-serif;
+            font-weight: 800;
+            font-size: 1.5rem;
+            letter-spacing: -0.5px;
+            background: linear-gradient(135deg, #fff 40%, var(--text-muted) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .logo-badge {
+            background: rgba(239, 68, 68, 0.12);
+            color: var(--accent-danger);
+            border: 1px solid rgba(239, 68, 68, 0.25);
+            padding: 0.2rem 0.6rem;
+            border-radius: 9999px;
+            font-size: 0.7rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .system-status {
+            display: flex;
+            align-items: center;
+            gap: 1.25rem;
+        }
+
+        .status-pill {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--card-border);
+            padding: 0.4rem 0.8rem;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background-color: var(--accent-success);
+            box-shadow: 0 0 10px var(--accent-success);
+        }
+
+        .status-dot.active-emergency {
+            background-color: var(--accent-danger);
+            box-shadow: 0 0 10px var(--accent-danger);
+            animation: pulse-dot 1s infinite;
+        }
+
+        main {
+            flex: 1;
+            padding: 2rem;
+            max-width: 1600px;
+            margin: 0 auto;
+            width: 100%;
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 2rem;
+        }
+
+        @media (max-width: 1024px) {
+            main {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .video-grid-section {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .section-title {
+            font-family: 'Outfit', sans-serif;
+            font-weight: 600;
+            font-size: 1.25rem;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .feed-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(420px, 1fr));
+            gap: 1.5rem;
+        }
+
+        @media (max-width: 640px) {
+            .feed-container {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .camera-card {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 16px;
+            overflow: hidden;
+            backdrop-filter: blur(16px);
+            transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .camera-card:hover {
+            transform: translateY(-4px);
+            border-color: rgba(59, 130, 246, 0.35);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .camera-card.alerting {
+            border-color: var(--accent-danger);
+            box-shadow: 0 0 15px rgba(239, 68, 68, 0.25);
+        }
+
+        .card-header {
+            padding: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--card-border);
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        .camera-info {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .camera-name {
+            font-weight: 600;
+            font-size: 0.95rem;
+            color: #fff;
+        }
+
+        .camera-location {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+
+        .feed-badge {
+            background: rgba(59, 130, 246, 0.12);
+            color: var(--accent-primary);
+            border: 1px solid rgba(59, 130, 246, 0.25);
+            padding: 0.2rem 0.6rem;
+            border-radius: 6px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .feed-badge.alerting {
+            background: rgba(239, 68, 68, 0.15);
+            color: var(--accent-danger);
+            border-color: rgba(239, 68, 68, 0.3);
+            animation: pulse-red 1s infinite alternate;
+        }
+
+        .video-wrapper {
+            position: relative;
+            aspect-ratio: 16/9;
+            background: #080b11;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .video-feed {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .card-footer {
+            padding: 0.75rem 1rem;
+            background: rgba(255, 255, 255, 0.01);
+            border-top: 1px solid var(--card-border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+
+        .control-panel {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .glass-panel {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 16px;
+            padding: 1.5rem;
+            backdrop-filter: blur(16px);
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+        }
+
+        .stat-card {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid var(--card-border);
+            border-radius: 12px;
+            padding: 1rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.25rem;
+        }
+
+        .stat-val {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #fff;
+        }
+
+        .stat-label {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .ambulance-dispatch-hub {
+            border-color: rgba(239, 68, 68, 0.25);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .ambulance-dispatch-hub::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: var(--accent-danger);
+        }
+
+        .dispatch-hub-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 1.25rem;
+            padding-bottom: 0.75rem;
+            border-bottom: 1px solid var(--card-border);
+        }
+
+        .dispatch-hub-title {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-weight: 600;
+            color: #fff;
+        }
+
+        .dispatch-hub-title i {
+            color: var(--accent-danger);
+            animation: pulse-glow 1.5s infinite alternate;
+        }
+
+        .log-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+            max-height: 480px;
+            overflow-y: auto;
+            padding-right: 0.25rem;
+        }
+
+        .log-list::-webkit-scrollbar {
+            width: 6px;
+        }
+        .log-list::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        .log-list::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 9999px;
+        }
+
+        .log-item {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid var(--card-border);
+            border-radius: 8px;
+            padding: 0.75rem 1rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.35rem;
+            animation: slide-in 0.3s ease-out;
+        }
+
+        .log-item.incident {
+            background: rgba(239, 68, 68, 0.08);
+            border-color: rgba(239, 68, 68, 0.2);
+            position: relative;
+        }
+
+        .log-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.75rem;
+            color: var(--text-muted);
+        }
+
+        .log-header {
+            font-weight: 600;
+            font-size: 0.85rem;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+
+        .log-desc {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+
+        .action-taken {
+            margin-top: 0.25rem;
+            font-size: 0.8rem;
+            color: var(--accent-success);
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+            background: rgba(16, 185, 129, 0.1);
+            border: 1px solid rgba(16, 185, 129, 0.2);
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            align-self: flex-start;
+        }
+
+        /* Banner styles */
+        .emergency-banner {
+            background: linear-gradient(90deg, rgba(239, 68, 68, 0.95), rgba(185, 28, 28, 0.95));
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 12px;
+            padding: 1rem 1.5rem;
+            display: none;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 2rem;
+            animation: slide-down 0.4s ease-out, alert-flash 1s infinite alternate;
+            box-shadow: 0 8px 32px rgba(239, 68, 68, 0.3);
+        }
+
+        .emergency-banner-content {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .emergency-banner-icon {
+            font-size: 1.5rem;
+            color: #fff;
+            animation: spin-pulse 1.2s infinite ease-in-out;
+        }
+
+        .emergency-banner-text h3 {
+            font-family: 'Outfit', sans-serif;
+            font-weight: 700;
+            color: #fff;
+            font-size: 1.05rem;
+        }
+
+        .emergency-banner-text p {
+            font-size: 0.85rem;
+            color: rgba(255, 255, 255, 0.9);
+        }
+
+        .emergency-banner-close {
+            background: rgba(255, 255, 255, 0.15);
+            border: none;
+            color: #fff;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            transition: background 0.2s;
+        }
+
+        .emergency-banner-close:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        footer {
+            text-align: center;
+            padding: 2rem;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            border-top: 1px solid var(--card-border);
+            margin-top: auto;
+            backdrop-filter: blur(12px);
+            background: rgba(11, 15, 25, 0.9);
+        }
+
+        @keyframes pulse-glow {
+            from {
+                text-shadow: 0 0 5px rgba(239, 68, 68, 0.5);
+                filter: drop-shadow(0 0 2px rgba(239, 68, 68, 0.3));
+            }
+            to {
+                text-shadow: 0 0 20px rgba(239, 68, 68, 1);
+                filter: drop-shadow(0 0 8px rgba(239, 68, 68, 0.8));
+            }
+        }
+
+        @keyframes pulse-dot {
+            0% {
+                transform: scale(0.95);
+                box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7);
+            }
+            70% {
+                transform: scale(1);
+                box-shadow: 0 0 0 10px rgba(239, 68, 68, 0);
+            }
+            100% {
+                transform: scale(0.95);
+                box-shadow: 0 0 0 0 rgba(239, 68, 68, 0);
+            }
+        }
+
+        @keyframes pulse-red {
+            from {
+                box-shadow: 0 0 4px rgba(239, 68, 68, 0.4);
+            }
+            to {
+                box-shadow: 0 0 12px rgba(239, 68, 68, 0.8);
+            }
+        }
+
+        @keyframes alert-flash {
+            from {
+                border-color: rgba(255, 255, 255, 0.2);
+            }
+            to {
+                border-color: rgba(255, 255, 255, 0.6);
+            }
+        }
+
+        @keyframes spin-pulse {
+            0% {
+                transform: scale(1) rotate(0deg);
+            }
+            50% {
+                transform: scale(1.2) rotate(180deg);
+            }
+            100% {
+                transform: scale(1) rotate(360deg);
+            }
+        }
+
+        @keyframes slide-in {
+            from {
+                opacity: 0;
+                transform: translateY(12px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes slide-down {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="logo-section">
+            <i class="fa-solid fa-truck-medical logo-icon"></i>
+            <div>
+                <h1>ACCIVISION AI</h1>
+                <p style="font-size: 0.75rem; color: var(--text-muted); font-weight: 500; letter-spacing: 0.5px;">Real-Time Accident Dispatch Node</p>
+            </div>
+            <span class="logo-badge">Live</span>
+        </div>
+        <div class="system-status">
+            <div class="status-pill">
+                <div class="status-dot" id="system-status-dot"></div>
+                <span id="system-status-text">SYSTEM NORMAL</span>
+            </div>
+            <div class="status-pill">
+                <i class="fa-solid fa-server" style="color: var(--accent-primary);"></i>
+                <span>Edge Server Active</span>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <div class="video-grid-section">
+            <!-- Active Emergency banner -->
+            <div class="emergency-banner" id="active-emergency-banner">
+                <div class="emergency-banner-content">
+                    <i class="fa-solid fa-circle-exclamation emergency-banner-icon"></i>
+                    <div class="emergency-banner-text">
+                        <h3 id="banner-title">CRITICAL ACCIDENT DETECTED</h3>
+                        <p id="banner-desc">Ambulance dispatched automatically by Accivision Ingestion Node.</p>
+                    </div>
+                </div>
+                <button class="emergency-banner-close" onclick="closeEmergencyBanner()">&times;</button>
+            </div>
+
+            <div class="section-header">
+                <h2 class="section-title"><i class="fa-solid fa-video" style="color: var(--accent-primary);"></i> LIVE FEED CHANNELS</h2>
+                <div style="font-size: 0.8rem; color: var(--text-muted); font-weight: 500;">
+                    Auto-ingesting from edge clients via Socket.IO stream
+                </div>
+            </div>
+
+            <div class="feed-container">
+                <!-- Camera Feed 1 -->
+                <div class="camera-card" id="card-CAM-NORTH-01">
+                    <div class="card-header">
+                        <div class="camera-info">
+                            <span class="camera-name">CAM-NORTH-01</span>
+                            <span class="camera-location"><i class="fa-solid fa-location-dot"></i> Highway-Mile-14</span>
+                        </div>
+                        <span class="feed-badge" id="badge-CAM-NORTH-01">STREAMING</span>
+                    </div>
+                    <div class="video-wrapper">
+                        <!-- Points to flask mjpeg video generator route -->
+                        <img class="video-feed" src="/video_feed/CAM-NORTH-01" onerror="showPlaceholder('CAM-NORTH-01')" alt="CAM-NORTH-01 Video Feed">
+                    </div>
+                    <div class="card-footer">
+                        <span>FPS: 30</span>
+                        <span>Resolution: 640x360</span>
+                    </div>
+                </div>
+
+                <!-- Camera Feed 2 -->
+                <div class="camera-card" id="card-CAM-DOWN-02">
+                    <div class="card-header">
+                        <div class="camera-info">
+                            <span class="camera-name">CAM-DOWN-02</span>
+                            <span class="camera-location"><i class="fa-solid fa-location-dot"></i> Downtown-Cross-St</span>
+                        </div>
+                        <span class="feed-badge" id="badge-CAM-DOWN-02">STREAMING</span>
+                    </div>
+                    <div class="video-wrapper">
+                        <!-- Points to flask mjpeg video generator route -->
+                        <img class="video-feed" src="/video_feed/CAM-DOWN-02" onerror="showPlaceholder('CAM-DOWN-02')" alt="CAM-DOWN-02 Video Feed">
+                    </div>
+                    <div class="card-footer">
+                        <span>FPS: 30</span>
+                        <span>Resolution: 640x360</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="control-panel">
+            <div class="glass-panel">
+                <h2 class="section-title" style="margin-bottom: 1.25rem;"><i class="fa-solid fa-chart-simple" style="color: var(--accent-primary);"></i> TELEMETRY OVERVIEW</h2>
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <span class="stat-val" id="stat-active-streams">2</span>
+                        <span class="stat-label">Ingest Ports</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-val" id="stat-total-alerts" style="color: {% if total_dispatches > 0 %}var(--accent-danger){% else %}#fff{% endif %};">{{ total_dispatches }}</span>
+                        <span class="stat-label">Dispatches</span>
+                    </div>
+                    <div class="stat-card" style="grid-column: span 2;">
+                        <span class="stat-val" style="color: var(--accent-success); font-size: 1.15rem; display: flex; align-items: center; gap: 0.4rem;">
+                            <i class="fa-solid fa-circle-check"></i> Connected
+                        </span>
+                        <span class="stat-label">Ambulance Service Status</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Standalone Ambulance Dispatch Hub Logs -->
+            <div class="glass-panel ambulance-dispatch-hub">
+                <div class="dispatch-hub-header">
+                    <div class="dispatch-hub-title">
+                        <i class="fa-solid fa-truck-medical"></i>
+                        <span>DISPATCH CONTROL REGISTRY</span>
+                    </div>
+                    <span style="font-size: 0.75rem; background: rgba(239, 68, 68, 0.15); color: var(--accent-danger); padding: 0.2rem 0.5rem; border-radius: 4px; font-weight: 600;">PORT 6000</span>
+                </div>
+                <div class="log-list" id="dispatch-logs">
+                    {% if historical_alerts %}
+                        {% for alert in historical_alerts %}
+                            <div class="log-item incident">
+                                <div class="log-meta">
+                                    <span>{{ alert.cctv_id }}</span>
+                                    <span>{{ alert.timestamp }}</span>
+                                </div>
+                                <div class="log-header">
+                                    <i class="fa-solid fa-triangle-exclamation" style="color: var(--accent-danger);"></i>
+                                    <span>Incident Detected ({{ alert.confidence }} Conf)</span>
+                                </div>
+                                <p class="log-desc">Location: <strong>{{ alert.location }}</strong> ({{ alert.detections_summary }})</p>
+                                {% if alert.dispatched %}
+                                    <div class="action-taken">
+                                        <i class="fa-solid fa-truck-medical"></i> Ambulance Dispatched
+                                    </div>
+                                {% endif %}
+                            </div>
+                        {% endfor %}
+                    {% else %}
+                        <div class="log-item" id="empty-log-placeholder">
+                            <span class="log-desc" style="text-align: center; display: block; font-style: italic;">No alerts generated. Awaiting traffic accidents...</span>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <p>&copy; 2026 Accivision AI Systems Inc. Engineered for resilient, real-time edge processing and autonomous municipal emergency routing.</p>
+    </footer>
+
+    <!-- SocketIO Client Library -->
+    <script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
+    <script>
+        const socket = io();
+        let alertCount = {{ total_dispatches }};
+        let activeEmergencyTimer = null;
+
+        socket.on('connect', () => {
+            console.log("Connected to Accivision Server via Socket.IO WebSocket");
+        });
+
+        socket.on('disconnect', () => {
+            console.log("Disconnected from Accivision Server");
+        });
+
+        // Triggered when an accident is detected and ambulance service is hit
+        socket.on('new_alert', (data) => {
+            console.log("ALERT INGESTED:", data);
+            
+            // Remove empty placeholder if still present
+            const placeholder = document.getElementById('empty-log-placeholder');
+            if (placeholder) {
+                placeholder.remove();
+            }
+
+            // Update stats
+            alertCount++;
+            document.getElementById('stat-total-alerts').innerText = alertCount;
+            document.getElementById('stat-total-alerts').style.color = '#ef4444';
+
+            // Show emergency header / system alert status
+            document.getElementById('system-status-dot').className = 'status-dot active-emergency';
+            document.getElementById('system-status-text').innerText = 'EMERGENCY DISPATCHED';
+            document.getElementById('system-status-text').style.color = '#ef4444';
+
+            // Pulse the card triggering the alert
+            const cardId = `card-${data.cctv_id}`;
+            const cardElement = document.getElementById(cardId);
+            if (cardElement) {
+                cardElement.classList.add('alerting');
+                // Pulse the badge
+                const badgeElement = document.getElementById(`badge-${data.cctv_id}`);
+                if (badgeElement) {
+                    badgeElement.classList.add('alerting');
+                    badgeElement.innerText = 'ACCIDENT!';
+                }
+
+                // Reset card styling after 8 seconds
+                setTimeout(() => {
+                    cardElement.classList.remove('alerting');
+                    const badge = document.getElementById(`badge-${data.cctv_id}`);
+                    if (badge) {
+                        badge.classList.remove('alerting');
+                        badge.innerText = 'STREAMING';
+                    }
+                }, 8000);
+            }
+
+            // Trigger sound or speech alert synthesis (if requested by browsers)
+            try {
+                if ('speechSynthesis' in window) {
+                    let text = `Warning! Accident detected at ${data.location}. Dispatching ambulance.`;
+                    let utterance = new SpeechSynthesisUtterance(text);
+                    utterance.rate = 1.0;
+                    window.speechSynthesis.speak(utterance);
+                }
+            } catch (e) {
+                console.log("Voice synthesis disabled or blocked");
+            }
+
+            // Show banner overlay
+            const banner = document.getElementById('active-emergency-banner');
+            document.getElementById('banner-title').innerText = `CRITICAL INCIDENT AT ${data.location.toUpperCase()}`;
+            document.getElementById('banner-desc').innerText = `Source: ${data.cctv_id} | Confidence: ${(data.confidence * 100).toFixed(1)}% | Action: ${data.action}`;
+            banner.style.display = 'flex';
+
+            // Clear any active banner fade timer
+            if (activeEmergencyTimer) clearTimeout(activeEmergencyTimer);
+            activeEmergencyTimer = setTimeout(() => {
+                closeEmergencyBanner();
+            }, 10000);
+
+            // Add dispatch log item
+            const logList = document.getElementById('dispatch-logs');
+            const timeStr = new Date().toLocaleTimeString();
+            
+            const logItem = document.createElement('div');
+            logItem.className = 'log-item incident';
+            logItem.innerHTML = `
+                <div class="log-meta">
+                    <span>${data.cctv_id}</span>
+                    <span>${timeStr}</span>
+                </div>
+                <div class="log-header">
+                    <i class="fa-solid fa-triangle-exclamation" style="color: var(--accent-danger);"></i>
+                    <span>Accident Detected (${(data.confidence * 100).toFixed(0)}% Conf)</span>
+                </div>
+                <p class="log-desc">Location: <strong>${data.location}</strong></p>
+                <div class="action-taken">
+                    <i class="fa-solid fa-truck-medical"></i> ${data.action}
+                </div>
+            `;
+            
+            // Insert at the top of logs
+            logList.insertBefore(logItem, logList.firstChild);
+        });
+
+        function closeEmergencyBanner() {
+            document.getElementById('active-emergency-banner').style.display = 'none';
+            // If no other alert happened, we can restore normal header status
+            // Wait, we keep counts active, but restore header text
+            document.getElementById('system-status-dot').className = 'status-dot';
+            document.getElementById('system-status-text').innerText = 'SYSTEM NORMAL';
+            document.getElementById('system-status-text').style.color = 'var(--text-main)';
+        }
+
+        function showPlaceholder(cctvId) {
+            const card = document.getElementById(`card-${cctvId}`);
+            if (card) {
+                const wrapper = card.querySelector('.video-wrapper');
+                wrapper.innerHTML = `
+                    <div class="placeholder-text">
+                        <i class="fa-solid fa-compact-disc"></i>
+                        <span>Awaiting Socket Ingestion...</span>
+                    </div>
+                `;
+                const badge = document.getElementById(`badge-${cctvId}`);
+                if (badge) {
+                    badge.innerText = 'OFFLINE';
+                    badge.style.background = 'rgba(255,255,255,0.05)';
+                    badge.style.color = 'var(--text-muted)';
+                    badge.style.borderColor = 'var(--card-border)';
+                }
+            }
+        }
+    </script>
+</body>
+</html>
