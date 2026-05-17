@@ -8,7 +8,7 @@ The futuristic glassmorphic monitoring dashboard utilizes **Socket.IO WebSockets
 
 ## 🖥️ Live Dashboard Preview (With Voice Alert)
 
-![Accivision AI Dashboard Preview](assets/dashboard_preview.png)
+![Accivision AI Dashboard Preview](assets/accivision.png)
 *Above: Futuristic Accivision AI Dashboard featuring live CCTV video ingestion streams, live emergency bounding boxes, dynamic telemetry cards, automatic dispatch logs, and built-in text-to-speech voice alerts.*
 
 ---
