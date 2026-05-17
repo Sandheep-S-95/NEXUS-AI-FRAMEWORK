@@ -4,7 +4,6 @@ import atexit
 import collections
 from datetime import datetime
 
-# Disable PyTorch/OpenMP multithreading BEFORE importing compiled packages.
 os.environ["OMP_NUM_THREADS"] = "1"
 os.environ["MKL_NUM_THREADS"] = "1"
 
@@ -21,7 +20,6 @@ from ultralytics import YOLO
 app = Flask(__name__)
 socketio = SocketIO(app, cors_allowed_origins="*", async_mode='threading')
 
-# Cache model globally
 MODEL_PATH = os.path.join('NEXUS-AI-FRAMEWORK', 'best.pt')
 if os.path.exists(MODEL_PATH):
     print(f"[SERVER] Loaded custom accident model: {MODEL_PATH}")
@@ -40,7 +38,7 @@ POST_RECORD_SECONDS = 180  # 3 Minutes AFTER accident
 MAX_PRE_FRAMES = int(PRE_RECORD_SECONDS * DVR_FPS)
 POST_FRAMES_TARGET = int(POST_RECORD_SECONDS * DVR_FPS)
 
-# Advanced thread-safe state for each camera
+
 CAMERA_STATES = {}
 CAMERA_STATES_LOCK = threading.Lock()
 
@@ -123,7 +121,7 @@ def index():
                     if dispatched:
                         total_dispatches += 1
                         
-                    # Let's gather all dispatches/emergencies to show in the UI list
+                    
                     detections = row.get('detections_summary', '')
                     is_emergency = any(x in detections for x in ['accident', 'fire'])
                     if dispatched or is_emergency:
@@ -138,7 +136,7 @@ def index():
         except Exception as e:
             print(f"[SERVER ERROR] Failed to read predictions log for index: {e}")
             
-    # Show the latest alerts first in the log list
+    
     historical_alerts.reverse()
     
     return render_template("index.html", 
@@ -195,7 +193,7 @@ def inference_worker():
                         cls = int(box.cls[0])
                         detected_classes.append(model.names.get(cls, f"class_{cls}"))
                         
-                        if cls in [0, 2]: # Custom Accident/Fire classes
+                        if cls in [0, 2]: # Accident/Fire classes
                             accident_detected = True
                             highest_conf = max(highest_conf, conf)
                     annotated_frame = r.plot()
@@ -213,12 +211,10 @@ def inference_worker():
                     
                     cam_state = CAMERA_STATES[cctv_id]
                     
-                    # Always append to the rolling history (Max 3 mins)
                     cam_state["pre_buffer"].append(annotated_frame)
                     
                     if accident_detected:
                         if cam_state["post_counter"] == 0:
-                            # 🚨 NEW EVENT: Open Writer & Dump History
                             os.makedirs('output_recordings', exist_ok=True)
                             timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
                             video_path = os.path.join('output_recordings', f"{cctv_id}_event_{timestamp}.avi")
@@ -229,23 +225,18 @@ def inference_worker():
                             
                             print(f"[DVR] 🚨 Accident! Dumping past {len(cam_state['pre_buffer'])} frames to disk...")
                             
-                            # Write all 3 minutes of historical context to file
                             for f in cam_state["pre_buffer"]:
                                 cam_state["writer"].write(f)
                         else:
-                            # Already recording an event, just write current frame
                             cam_state["writer"].write(annotated_frame)
                             
-                        # Reset the countdown timer to a full 3 minutes
                         cam_state["post_counter"] = POST_FRAMES_TARGET
                         
                     else:
-                        # No accident right now, but are we still recording the aftermath?
                         if cam_state["post_counter"] > 0:
                             cam_state["writer"].write(annotated_frame)
                             cam_state["post_counter"] -= 1
                             
-                            # If aftermath countdown hits 0, finish the video
                             if cam_state["post_counter"] <= 0:
                                 print(f"[DVR] ✅ Event clip finished for {cctv_id}.")
                                 cam_state["writer"].release()
@@ -253,7 +244,6 @@ def inference_worker():
 
                 # ==========================================
                 
-                # Logs & Web Streaming Logic
                 if detected_classes:
                     from collections import Counter
                     counts = Counter(detected_classes)
